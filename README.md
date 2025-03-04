@@ -3,7 +3,7 @@
 [![node](https://img.shields.io/node/v/content-injector-webpack-plugin.svg)](https://github.com/z-ti/content-injector-webpack-plugin)
 [![npm](https://img.shields.io/npm/v/content-injector-webpack-plugin.svg)](https://www.npmjs.com/package/content-injector-webpack-plugin)
 [![Downloads](https://img.shields.io/npm/d18m/content-injector-webpack-plugin.svg)](https://npm-stat.com/charts.html?package=content-injector-webpack-plugin)
-[![License: MIT](https://img.shields.io/npm/l/content-injector-webpack-plugin.svg)](https://github.com/z-ti/content-injector-webpack-plugin/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/npm/l/content-injector-webpack-plugin.svg)](https://github.com/z-ti/content-injector-webpack-plugin/blob/main/LICENSE)
 
 内容注入插件，支持灵活的资源修改策略。可轻松添加构建信息、项目版本等通用内容。
 
@@ -20,6 +20,8 @@
 npm install content-injector-webpack-plugin --save-dev
 # 或
 yarn add content-injector-webpack-plugin -D
+# 或
+pnpm install content-injector-webpack-plugin --save-dev
 ```
 
 ## 🚀 快速开始
