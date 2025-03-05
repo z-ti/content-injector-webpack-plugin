@@ -8,7 +8,7 @@ interface PluginOptions {
   content: string | (() => string);
 }
 
-class WebpackBannerPlugin {
+class ContentInjectorWebpackPlugin {
   private options: PluginOptions;
 
   constructor(options: PluginOptions) {
@@ -21,7 +21,7 @@ class WebpackBannerPlugin {
 
   apply(compiler: Compiler) {
     compiler.hooks.emit.tapAsync(
-      'WebpackBannerPlugin',
+      'ContentInjectorWebpackPlugin',
       (compilation: Compilation, callback: () => void) => {
         const bannerContent = typeof this.options.content === 'function'
           ? this.options.content()
@@ -87,4 +87,4 @@ class WebpackBannerPlugin {
   }
 }
 
-export default WebpackBannerPlugin;
+export default ContentInjectorWebpackPlugin;

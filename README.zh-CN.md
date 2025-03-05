@@ -6,28 +6,29 @@
 [![License: MIT](https://img.shields.io/npm/l/content-injector-webpack-plugin.svg)](https://github.com/z-ti/content-injector-webpack-plugin/blob/main/LICENSE)
 [![Coverage](https://codecov.io/gh/z-ti/content-injector-webpack-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/z-ti/content-injector-webpack-plugin)
 
-English | [简体中文](./README.zh-CN.md)
+简体中文 | [English](./README.md)
 
-A flexible Webpack plugin for injecting dynamic content (e.g., version, timestamps) into build assets with precise file matching and position control.
+内容注入插件，支持灵活的资源修改策略。可轻松添加构建信息、项目版本等通用内容。
 
-## ✨ Features
 
-- ⏱ **Build Time Injection** - Automatically adds a packaging timestamp.
-- 🎯 **Precise Targeting** - Supports regex/function matching for files.
-- 📌 **Position Control‌** - Choose between head or tail for content insertion.
-- 🧩 **Multi-Format Support‌** - Native support for JS/CSS/HTML and other text resources.
+## ✨ 特性
 
-## 📦 Installation
+- ⏱ **构建时间注入** - 自动添加打包时间戳
+- 🎯 **精准定位** - 支持正则/函数匹配文件
+- 📌 **位置控制** - 头部/尾部自由选择
+- 🧩 **多格式支持** - 原生支持 JS/CSS/HTML 等文本资源
+
+## 📦 安装
 
 ```bash
 npm install content-injector-webpack-plugin --save-dev
-# or
+# 或
 yarn add content-injector-webpack-plugin -D
-# or
+# 或
 pnpm install content-injector-webpack-plugin --save-dev
 ```
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
 ```javascript
 // webpack.config.js
@@ -42,19 +43,19 @@ module.exports = {
 };
 ```
 
-## ⚙️ Options
+## ⚙️ 配置选项
 
-| Name        | Type                                     | Default       | Description                                 |
+| 参数        | 类型                                      | 默认值       | 说明                                 |
 |-------------|------------------------------------------|-------------|--------------------------------------|
-| `content`   | `string \| () => string`                 | **Required‌**     | The content to insert, supporting dynamic functions.               |
-| `match`      | `RegExp \| (file: string) => boolean`    | `/\.js$/`   | Basic matching condition.                         |
-| `include`   | `RegExp \| string \| (file: string) => boolean` | - | Whitelist (takes precedence over match)            |
-| `exclude`   | `RegExp \| string \| (file: string) => boolean` | - | Blacklist                              |
-| `position`  | `'head' \| 'tail'`                       | `'head'`    | Position for content insertion                        |
+| `content`   | `string \| () => string`                 | **必填**     | 插入内容，支持动态函数               |
+| `match`      | `RegExp \| (file: string) => boolean`    | `/\.js$/`   | 基础匹配条件                         |
+| `include`   | `RegExp \| string \| (file: string) => boolean` | - | 白名单（优先级高于 match）            |
+| `exclude`   | `RegExp \| string \| (file: string) => boolean` | - | 黑名单                              |
+| `position`  | `'head' \| 'tail'`                       | `'head'`    | 内容插入位置                        |
 
-## 🌈 Advanced Usage
+## 🌈 高级用法
 
-### Dynamic Content Generation
+### 动态内容生成
 
 ```javascript
 new ContentInjector({
@@ -66,7 +67,7 @@ new ContentInjector({
 })
 ```
 
-### Multi-File Type Handling
+### 多文件类型处理
 
 ```javascript
 new ContentInjector({
@@ -76,7 +77,7 @@ new ContentInjector({
 })
 ```
 
-### Combined Conditions
+### 组合条件
 
 ```javascript
 new ContentInjector({
@@ -87,14 +88,13 @@ new ContentInjector({
 })
 ```
 
-## 🐛 Issues
+## 🐛 问题
 
-If you encounter any issues or have suggestions for improvements, please click here [Issue Report](https://github.com/z-ti/content-injector-webpack-plugin/issues)
+如果您遇到任何问题或有改进建议，请点击这里 [Issue Report](https://github.com/z-ti/content-injector-webpack-plugin/issues)
 
-## 📄 License
+## 📄 许可证
 
-[MIT](https://github.com/z-ti/content-injector-webpack-plugin/blob/master/LICENSE) 
-
-Copyright (c) 2025-present flyfox
+MIT © 2025 flyfox  
+完整协议见 [MIT](https://github.com/z-ti/content-injector-webpack-plugin/blob/master/LICENSE) 文件
 
 
