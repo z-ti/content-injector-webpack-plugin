@@ -23,9 +23,10 @@ class ContentInjectorWebpackPlugin {
     compiler.hooks.emit.tapAsync(
       'ContentInjectorWebpackPlugin',
       (compilation: Compilation, callback: () => void) => {
-        const bannerContent = typeof this.options.content === 'function'
-          ? this.options.content()
-          : this.options.content;
+        const bannerContent =
+          typeof this.options.content === 'function'
+            ? this.options.content()
+            : this.options.content;
 
         Object.keys(compilation.assets).forEach((filename) => {
           if (
@@ -35,9 +36,10 @@ class ContentInjectorWebpackPlugin {
             const asset = compilation.assets[filename];
             const originalSource = asset.source().toString();
 
-            const newSource = this.options.position === 'head'
-              ? new sources.ConcatSource(bannerContent, originalSource)
-              : new sources.ConcatSource(originalSource, bannerContent);
+            const newSource =
+              this.options.position === 'head'
+                ? new sources.ConcatSource(bannerContent, originalSource)
+                : new sources.ConcatSource(originalSource, bannerContent);
 
             compilation.assets[filename] = newSource;
           }
