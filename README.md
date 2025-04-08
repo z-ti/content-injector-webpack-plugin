@@ -16,6 +16,7 @@ A flexible Webpack plugin for injecting dynamic content (e.g., version, timestam
 - 🎯 **Precise Targeting** - Supports regex/function matching for files.
 - 📌 **Position Control‌** - Choose between head or tail for content insertion.
 - 🧩 **Multi-Format Support‌** - Native support for JS/CSS/HTML and other text resources.
+- 🔐 **Hash Injection** - Supports content-based hash value injection, Configurable hash algorithm and length.
 
 ## 📦 Installation
 
@@ -36,21 +37,24 @@ const ContentInjector = require('content-injector-webpack-plugin');
 module.exports = {
   plugins: [
     new ContentInjector({
-      content: `/*! Build at: ${new Date().toLocaleString()} */\n`
-    })
-  ]
+      content: `/*! Build at: ${new Date().toLocaleString()} */\n`,
+    }),
+  ],
 };
 ```
 
 ## ⚙️ Options
 
-| Name        | Type                                     | Default       | Description                                 |
-|-------------|------------------------------------------|-------------|--------------------------------------|
-| `content`   | `string \| () => string`                 | **Required‌**     | The content to insert, supporting dynamic functions.               |
-| `match`      | `RegExp \| (file: string) => boolean`    | `/\.js$/`   | Basic matching condition.                         |
-| `include`   | `RegExp \| string \| (file: string) => boolean` | - | Whitelist (takes precedence over match)            |
-| `exclude`   | `RegExp \| string \| (file: string) => boolean` | - | Blacklist                              |
-| `position`  | `'head' \| 'tail'`                       | `'head'`    | Position for content insertion                        |
+| Name            | Type                                                 | Default       | Description                                                            |
+| --------------- | ---------------------------------------------------- | ------------- | ---------------------------------------------------------------------- |
+| `content`       | `string \| () => string \| (hash: string) => string` | **Required‌** | The content to insert, supporting dynamic functions and hash parameter |
+| `match`         | `RegExp \| (file: string) => boolean`                | `/\.js$/`     | Basic matching condition                                               |
+| `include`       | `RegExp \| string \| (file: string) => boolean`      | -             | Whitelist (takes precedence over match)                                |
+| `exclude`       | `RegExp \| string \| (file: string) => boolean`      | -             | Blacklist                                                              |
+| `position`      | `'head' \| 'tail'`                                   | `'head'`      | Position for content insertion                                         |
+| `injectHash`    | `boolean`                                            | `false`       | Whether to inject file hash value                                      |
+| `hashAlgorithm` | `string`                                             | `md5`         | Hash algorithm (e.g. 'sha1', 'sha256')                                 |
+| `hashLength`    | `number`                                             | `8`           | Hash value truncation length                                           |
 
 ## 🌈 Advanced Usage
 
@@ -62,8 +66,8 @@ new ContentInjector({
     Version: ${process.env.APP_VERSION || 'dev'}
     Build: ${new Date().toISOString()}
   */`,
-  match: /app\.js$/
-})
+  match: /app\.js$/,
+});
 ```
 
 ### Multi-File Type Handling
@@ -72,8 +76,8 @@ new ContentInjector({
 new ContentInjector({
   content: '<!-- Built with Webpack -->',
   match: /\.(js|css|html)$/,
-  exclude: /vendor/
-})
+  exclude: /vendor/,
+});
 ```
 
 ### Combined Conditions
@@ -82,9 +86,23 @@ new ContentInjector({
 new ContentInjector({
   content: '// @generated',
   include: /src\/lib/,
-  exclude: file => file.includes('test'),
-  position: 'tail'
-})
+  exclude: (file) => file.includes('test'),
+  position: 'tail',
+});
+```
+
+### Hash Value Injection
+
+```javascript
+new ContentInjector({
+  content: (hash) => {
+    return `/*! APP v${require('./package.json').version} ContentHash: ${hash} */\n`;
+  },
+  match: /\.(js|css)$/,
+  injectHash: true,
+  hashAlgorithm: 'md5',
+  hashLength: 12,
+});
 ```
 
 ## 🐛 Issues
@@ -93,8 +111,6 @@ If you encounter any issues or have suggestions for improvements, please click h
 
 ## 📄 License
 
-[MIT](https://github.com/z-ti/content-injector-webpack-plugin/blob/master/LICENSE) 
+[MIT](https://github.com/z-ti/content-injector-webpack-plugin/blob/master/LICENSE)
 
 Copyright (c) 2025-present flyfox
-
-

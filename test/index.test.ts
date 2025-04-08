@@ -23,7 +23,10 @@ describe('ContentInjectorWebpackPlugin', () => {
     expect((plugin as any).options).toEqual({
       match: /\.js$/,
       position: 'head',
-      content: 'test'
+      content: 'test',
+      injectHash: false,
+      hashAlgorithm: 'md5',
+      hashLength: 8
     });
   });
 
@@ -31,7 +34,10 @@ describe('ContentInjectorWebpackPlugin', () => {
     const options = {
       match: /\.css$/,
       position: 'tail' as const,
-      content: 'custom'
+      content: 'custom',
+      injectHash: false,
+      hashAlgorithm: 'md5',
+      hashLength: 8
     };
     const plugin = new ContentInjectorWebpackPlugin(options);
     expect((plugin as any).options).toEqual(options);
@@ -159,5 +165,35 @@ describe('ContentInjectorWebpackPlugin', () => {
     expect((plugin as any).shouldProcessFile('app.png')).toBe(false);
     // 测试 source map 文件
     expect((plugin as any).shouldProcessFile('app.js.map')).toBe(false);
+  });
+
+  test('should handle zero length (edge case)', () => {
+    const plugin = new ContentInjectorWebpackPlugin({
+      content: (hash) => `/* HASH: ${hash} */`,
+      injectHash: true,
+      hashLength: 0
+    });
+
+    compilation.assets['zero.js'] = new sources.RawSource('content');
+    plugin.apply(compiler);
+
+    const result = compilation.assets['zero.js'].source();
+    expect(result).toBe('/* HASH:  */content');
+  });
+
+  test('should handle hash injection', () => {
+    const plugin = new ContentInjectorWebpackPlugin({
+      content: (hash) => `/* HASH: ${hash} */`,
+      injectHash: true,
+      hashAlgorithm: 'md5',
+      hashLength: 8
+    });
+
+    compilation.assets['hashed.js'] = new sources.RawSource('content');
+    plugin.apply(compiler);
+
+    const result = compilation.assets['hashed.js'].source();
+    expect(result).toMatch(/^\/\* HASH: [a-f0-9]{8} \*\//);
+    expect(result).toContain('content');
   });
 });

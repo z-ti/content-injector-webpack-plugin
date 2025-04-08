@@ -1,6 +1,6 @@
 {
   "name": "content-injector-webpack-plugin",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A flexible Webpack plugin for injecting dynamic content (e.g., version, timestamps) into build assets with precise file matching and position control.",
   "keywords": [
     "webpack",

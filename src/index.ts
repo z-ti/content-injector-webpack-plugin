@@ -1,11 +1,15 @@
 import { Compiler, Compilation, sources } from 'webpack';
+import { createHash } from 'crypto';
 
 interface PluginOptions {
   match?: RegExp | ((filename: string) => boolean);
   include?: RegExp | string | ((filename: string) => boolean);
   exclude?: RegExp | string | ((filename: string) => boolean);
   position?: 'head' | 'tail';
-  content: string | (() => string);
+  content: string | (() => string) | ((hash: string) => string);
+  injectHash?: boolean;
+  hashAlgorithm?: string;
+  hashLength?: number;
 }
 
 class ContentInjectorWebpackPlugin {
@@ -15,6 +19,9 @@ class ContentInjectorWebpackPlugin {
     this.options = {
       match: /\.js$/,
       position: 'head',
+      injectHash: false,
+      hashAlgorithm: 'md5',
+      hashLength: 8,
       ...options,
     };
   }
@@ -23,11 +30,6 @@ class ContentInjectorWebpackPlugin {
     compiler.hooks.emit.tapAsync(
       'ContentInjectorWebpackPlugin',
       (compilation: Compilation, callback: () => void) => {
-        const bannerContent =
-          typeof this.options.content === 'function'
-            ? this.options.content()
-            : this.options.content;
-
         Object.keys(compilation.assets).forEach((filename) => {
           if (
             this.shouldProcessFile(filename) &&
@@ -35,12 +37,23 @@ class ContentInjectorWebpackPlugin {
           ) {
             const asset = compilation.assets[filename];
             const originalSource = asset.source().toString();
+            
+            const fileHash = this.options.injectHash 
+              ? this.getFileHash(originalSource)
+              : '';
 
+            let bannerContent: string;
+            if (typeof this.options.content === 'function') {
+              bannerContent = this.options.injectHash
+                ? (this.options.content as (hash: string) => string)(fileHash)
+                : (this.options.content as () => string)();
+            } else {
+              bannerContent = this.options.content;
+            }
             const newSource =
               this.options.position === 'head'
                 ? new sources.ConcatSource(bannerContent, originalSource)
                 : new sources.ConcatSource(originalSource, bannerContent);
-
             compilation.assets[filename] = newSource;
           }
         });
@@ -48,6 +61,15 @@ class ContentInjectorWebpackPlugin {
         callback();
       }
     );
+  }
+
+  private getFileHash(content: string): string {
+    const hash = createHash(this.options.hashAlgorithm!)
+      .update(content)
+      .digest('hex');
+    return this.options.hashLength 
+      ? hash.substring(0, this.options.hashLength)
+      : '';
   }
 
   private validateFilename(filename: string): boolean {
